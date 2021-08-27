@@ -1,0 +1,12 @@
+{% load i18n static simpletags %}
+
+<div id="home">
+
+    {% if "SIMPLEUI_HOME_INFO"|get_config != False %}
+        <el-row class="info-card">
+            {% plots %}
+        </el-row>
+    {% endif %}
+
+    
+</div>

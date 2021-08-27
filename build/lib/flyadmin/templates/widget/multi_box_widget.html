@@ -1,0 +1,172 @@
+
+<div id="multi_box_{{name}}">
+  <input type="text" name="{{ name }}" id="id_{{name}}" v-model='tableDatas' style="display: none">
+ 
+<template>
+  <el-table
+    :data="tableData"
+    border
+    style="width: 100%">
+    {% for row in columns_name%}
+    <el-table-column
+      label="{{row.1}}"
+      width="140">
+      <template slot-scope="scope">
+          <template v-if="'{{row.0}}' == 'image' || '{{row.0}}' == 'photo'  || '{{row.0}}' == 'photos' ">
+              <el-upload
+                class="avatar-uploader"
+                action="{{ path }}"
+                :show-file-list="false"
+                accept='image/*'
+                :limit=1
+                :data={"uid":scope.row.uid}
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload">
+                <img v-if="scope.row.{{row.0}}" :src="scope.row.{{row.0}}" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
+         </template>
+          <template v-else>
+              <template v-if="scope.row.xeditor == 0">
+                ${ scope.row.{{row.0}} } 
+              </template>
+              <template v-else>
+                <el-input v-model="scope.row.{{row.0}} " placeholder="{{ row.1 }}"></el-input>
+              </template>
+          </template>
+      </template>
+    </el-table-column>
+    {% endfor %}
+    <el-table-column label="操作" width="150">
+      <template slot-scope="scope">
+        <template v-if="scope.row.xeditor == 0">
+            <el-button
+            size="mini"
+            type="primary"
+            @click.native.prevent="editRow(scope.$index, tableData)">编辑</el-button>
+         </template>
+         <template v-else>
+          <el-button
+            size="mini"
+            type="primary"
+            @click.native.prevent="saveRow(scope.$index, tableData)">保存</el-button>
+         </template>
+         <el-button
+            size="mini"
+            type="danger"
+            @click.native.prevent="deleteRow(scope.$index, tableData)">删除</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
+  <div style="margin-top: 20px">
+    <el-button @click="addRow(tableData)"  type="success" plain>添加</el-button>
+  </div>
+</template>
+ 
+</div>
+
+<script>
+  var app = new Vue({
+    el: "#multi_box_{{name}}",
+    delimiters:['${','}'],
+    data() {
+      return {
+        tableDatas:'',
+        tableData: {{data|safe}}
+      }
+    },
+    mounted: function () {
+      this.to_json();
+    },
+    methods: {
+      addRow(tableData){//新增一行
+         let t = {'uid':this.uuid(), 'xeditor':1};
+         {% for row in columns_name%}
+          t['{{row.0}}'] = ''
+         {% endfor %}
+         tableData.push(t)
+      },
+      handleAvatarSuccess(res, file) {
+        if(res && res.data){
+          let uid = res.data.uid
+          let path = res.data.path
+          if(uid && path){
+            this.tableData.forEach((item, index) =>{
+              if(item.uid == uid){
+                  this.tableData[index]['image'] = path
+              }
+            });
+          }
+        }
+        this.imageUrl = URL.createObjectURL(file.raw);
+      },
+      beforeAvatarUpload(file) {
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isLt2M;
+      },
+      deleteRow(index, rows) {
+        rows.splice(index, 1);
+        this.to_json()
+        this.$message({
+          message: '删除成功',
+          type: 'warning'
+        });
+
+      },
+      editRow(index, rows) {
+        rows[index]['xeditor'] = 1
+        this.to_json()
+      },
+      saveRow(index, rows) {
+        rows[index]['xeditor'] = 0
+        this.to_json()
+      },
+      to_json(){
+        this.tableDatas = JSON.stringify(this.tableData)
+      },
+      uuid() {
+          var s = [];
+          var hexDigits = "0123456789abcdef";
+          for (var i = 0; i < 36; i++) {
+              s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+          }
+          s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+          s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+          s[8] = s[13] = s[18] = s[23] = "-";
+       
+          return s.join("");
+          
+      },
+    },
+  })
+</script>
+
+<style>
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+  }
+  .avatar {
+    width: 80px;
+    height: 80px;
+    display: block;
+  }
+</style>

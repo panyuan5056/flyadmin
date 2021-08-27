@@ -1,0 +1,36 @@
+<div id="timeline-widget-{{name}}" >
+  <textarea id="id_{{name}}" name="{{ name }}" style="display: none">{{value}}</textarea>
+  <el-timeline> 
+    <el-timeline-item
+      v-for="(activity, index) in activities"
+      :key="index"
+      :icon="activity.icon"
+      :type="activity.type"
+      :color="activity.color"
+      :size="activity.size"
+      :timestamp="activity.timestamp">
+      <el-card>
+        <h4>${activity.content}</h4>
+        <p>${activity.user} 提交于 ${activity.timestamp}</p>
+      </el-card>
+    </el-timeline-item>
+  </el-timeline>
+</div>
+
+
+<script>
+  var app = new Vue({
+                      el: "#timeline-widget-{{name}}",
+                      delimiters:['${','}'],
+                      data: {
+                            activities: {{ activities|safe }}
+                      },
+                      methods:{
+                         
+                      }
+                  })
+   
+</script>
+
+
+ 

@@ -1,0 +1,40 @@
+<div id="select_box_{{name}}">
+  <input type="text" name="{{ name }}" id="id_{{name}}"  v-model="value" style="display: none;">
+  <template>
+    <el-select
+      v-model="value"
+      multiple-limit=1
+      filterable
+      allow-create
+      default-first-option
+      placeholder="请选择">
+      <el-option
+        v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-select>
+  </template>
+
+</div>
+
+<script>
+  var app = new Vue({
+                      el: "#select_box_{{name}}",
+                      delimiters:['${','}'],
+                      data: {
+                            options: {{selects|safe}},
+                            value: "{{ value|safe }}"
+                      }
+                  })
+   
+</script>
+<style type="text/css">
+  #select_box_{{name}} .el-select{
+    border:1px solid #ccc;
+  }
+  #select_box_{{name}} .el-input__inner{
+    border:none;
+  }
+</style>

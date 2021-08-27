@@ -1,0 +1,55 @@
+ 
+<div id="multi_datepicker_{{name}}">
+  <input type="text" name="{{ name }}" id="id_{{name}}" v-model='strDate' style="display: none;">
+  <el-date-picker
+      v-model="exCheckDate"
+      type="datetime"
+      value-format="yyyy-MM-dd HH:mm:ss"
+      format="yyyy-MM-dd HH:mm:ss"
+      :picker-options="pickerOptions"
+      placeholder="选择日期时间"
+      @change="getSTime"
+  >
+  </el-date-picker>
+</div>
+ 
+<script>
+  var app = new Vue({
+    el: "#multi_datepicker_{{name}}",
+    delimiters:['${','}'],
+    data () {
+      return {
+        strDate:'{{value|safe}}',
+        exCheckDate:new Date('{{value|safe}}'),
+        pickerOptions: {
+          shortcuts: [{
+            text: '今天',
+            onClick(picker) {
+              picker.$emit('pick', new Date());
+            }
+          }, {
+            text: '昨天',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24);
+              picker.$emit('pick', date);
+            }
+          }, {
+            text: '一周前',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', date);
+            }
+          }]
+        }, // 日期设置对象
+      }
+    } ,
+  methods:{
+    getSTime(val) {
+        this.exCheckDate = val;
+        this.strDate = val
+    }
+  }
+  });
+</script>

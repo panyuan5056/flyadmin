@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: flyadmin
+Version: 0.0.1
+Summary: django admin theme 后台模板
+Home-page: https://github.com/panyuan5056/flyadmin
+Author: py
+Author-email: 376105482@qq.com
+License: Apache License 2.0
+Description: # flyadmin
+Platform: UNKNOWN

@@ -1,0 +1,25 @@
+<div id="input_number_{{name}}" style="margin: 3px 0">
+  <input type="text" name="{{ name }}" id="id_{{name}}"  v-model="num" style="display: none;">
+  <template>
+    <el-input-number v-model="num" @change="handleChange" :min="1"  label="描述文字"></el-input-number>
+  </template>
+
+</div>
+
+<script>
+  var app = new Vue({
+                      el: "#input_number_{{name}}",
+                      delimiters:['${','}'],
+                      data: {
+                            num: {{value}}
+                      },
+                      methods: {
+                        handleChange(value) {
+                          console.log(value);
+                          this.num = value
+                        }
+                      }
+                  })
+   
+</script>
+ 

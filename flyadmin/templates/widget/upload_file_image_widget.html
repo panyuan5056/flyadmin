@@ -1,0 +1,49 @@
+<div id="upload_file_image_{{name}}">
+  <input type="text" name="{{ name }}" id="id_{{name}}"  v-model="filestr" style="display: none">
+<el-upload
+  class="upload-demo"
+  action="{{ upload_path }}"
+  accept="application/msexcel,application/msword,application/pdf,image/jpeg,image/png,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  :on-change="handleChange"
+  :on-remove="handelRemove"
+  :file-list="fileList">
+  <el-button size="small" type="primary">点击上传</el-button>
+</el-upload>
+</div>
+
+<script>
+  var app = new Vue({
+    el: "#upload_file_image_{{name}}",
+    delimiters:['${','}'],
+    data() {
+      return {
+        fileList: {{value|safe}},
+        filestr:"{{values}}"
+      };
+    },
+    methods: {
+      handelRemove(file, fileList) {
+        console.log(file)
+        console.log(fileList)
+        var t = [];
+        fileList.forEach(v=>{ 
+            if(!!v.url){
+              t.push(v.url); 
+            }
+        });
+        console.log(t)
+        this.filestr = t.join(',')
+      },
+      handleChange(file, fileList) {
+        var t = [];
+        fileList.forEach(v=>{ 
+            if(!!v.response){
+              t.push(v.response.data.path); 
+            }
+        });
+        this.fileList = fileList.slice(-3);
+        this.filestr = t.join(',')
+      }
+    }
+  });
+</script>

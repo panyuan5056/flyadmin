@@ -1,0 +1,111 @@
+<style type="text/css">
+    #steps_normal_widget_{{name}}{
+        margin: 30px;
+        display: block;
+        width: 60%;
+        float:left;
+        text-align: center;
+    }
+
+    #steps_normal_widget_{{name}} .rect {
+        height: 40px;
+        border-radius: 10px;
+        background: pink;
+        text-align: center;
+        padding: 5px;
+        margin: 5px 5px;
+    }
+
+    #steps_normal_widget_{{name}} .rect:hover {
+        cursor: pointer;
+    }
+
+    #steps_normal_widget_{{name}} .rect p {
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+
+    #steps_normal_widget_{{name}} .flex {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap
+    }
+
+    #steps_normal_widget_{{name}} .flex > div {
+        width: 25%;
+    }
+
+    #steps_normal_widget_{{name}} .arrow {
+        margin: 0 10px 0;
+    }
+
+    #steps_normal_widget_{{name}} .arrow-body {
+        width: 20px;
+        height: 50px;
+        background: #ccc;
+        margin: 0 auto;
+    }
+
+    #steps_normal_widget_{{name}} .arrow-footer {
+        width: 0;
+        height: 0;
+        border-width: 30px 30px 0;
+        border-style: solid;
+        border-color: #ccc transparent transparent; /*灰 透明 透明 */
+        margin: 0 auto;
+    }
+
+     
+</style>
+ 
+<div id="steps_normal_widget_{{name}}">
+    <input type="input" name="{{name}}" id="id_{{name}}" v-model="content" style="display: none" />
+    <template v-for="(row, n) in flows">
+        <template v-if="row[0] == 'is_end'">
+            <div class="flex">
+                <div>
+                    <div class="rect" style="background: ${row[1].color}" data="${row[1].title}">
+                        <p>${row[1].title}</p>
+                        <template v-if="row[1].active == 1">
+                            <p>已经确认</p>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <template v-else>
+            <div class="flex">
+                <div>
+                    <div class="rect" style="background: ${row[1].color}" data="${row[1].title}">
+                        <p>${row[1].title}</p>
+                        <template v-if="row[1].active == 1">
+                            <p>已经确认</p>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <div class="arrow">        
+                <div class="arrow-body"></div>
+                <div class="arrow-footer"></div>
+            </div>
+        </template>
+    </template> 
+
+</div>
+
+<script>
+  var app = new Vue({
+    el: "#steps_normal_widget_{{name}}",
+    delimiters:['${','}'],
+    data () {
+      return {
+        flows: {{ defaults|safe }},
+        content: JSON.stringify({{defaults|safe}})
+        } 
+    }
+  });
+</script>
